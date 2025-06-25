@@ -1,5 +1,5 @@
-from agent import PandasAgent, define_model
-from dataset import KaggleDatasetLoader
+from .agent import PandasAgent, define_model
+from .dataset import KaggleDatasetLoader
 
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -30,7 +30,7 @@ def load_MAIN_DF():
     rev_df = data_dict['rev1.csv']
     MAIN_DF = pd.merge(pd.merge(crm_df, device_df, on='msisdn'),rev_df,on='msisdn').dropna()
     
-    return MAIN_DF.loc[:50000, :]
+    return MAIN_DF.loc[:10000, :]
 
 class ClusteringOutput(BaseModel):
     
@@ -108,7 +108,7 @@ class ClusteringCustomer():
         history:list = [],
         display_graph:bool = False,
         number_of_cluster:int = 10,
-        save_clustred:bool = True
+        save_clustred:bool = False
         ):
         featrues = self.agent.call_agent(query=objective, dataframe=self.MAIN_DF)
         wcss = []
@@ -192,10 +192,10 @@ class ClusteringCustomer():
         return agent_response
 
 if __name__ == "__main__":
-    dataloader = KaggleDatasetLoader(kaggle_path="youssefaboelwafa/clustering-penguins-species")
-    data_dict = dataloader.load_dataset()
-    raw_data = data_dict['penguins.csv'].dropna()
-    agent = ClusteringCustomer(dataframe=raw_data)
+    # dataloader = KaggleDatasetLoader(kaggle_path="youssefaboelwafa/clustering-penguins-species")
+    # data_dict = dataloader.load_dataset()
+    # raw_data = data_dict['penguins.csv'].dropna()
+    # agent = ClusteringCustomer(dataframe=raw_data)
     # agent = ClusteringCustomer()
     
     # On terminal interface
@@ -210,8 +210,9 @@ if __name__ == "__main__":
     #     print(agent.apply_KMeans(objective=user_query))
     
     # Apply gradio interface
-    app = gr.ChatInterface(
-        fn = agent.apply_KMeans,
-        type="messages"
-    )
-    app.launch()
+    # app = gr.ChatInterface(
+    #     fn = agent.apply_KMeans,
+    #     type="messages"
+    # )
+    # app.launch()
+    pass
