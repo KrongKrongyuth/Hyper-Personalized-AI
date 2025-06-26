@@ -2,24 +2,24 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 import base64
 from websockets_api_example import generate_image_from_prompt_and_file
+import io
+from typing import List, Union
 
 app = FastAPI()
 
 @app.post("/generate-image")
-async def generate_image(
-    image: UploadFile = File(...),
-    positive_prompt: str = Form(...),
-    negative_prompt: str = Form(...),
-    ci_positive_prompt: str = Form(""),
-    ci_negative_prompt: str = Form("")
+def generate_image(
+    image: str,
+    positive_prompt: str,
+    negative_prompt: str,
+    ci_positive_prompt: str,
+    ci_negative_prompt: str
 ):
     try:
-        # Read uploaded image into bytes
-        image_data = await image.read()
-
+        print(image)
         # Generate images (list of bytes)
         generated_images = generate_image_from_prompt_and_file(
-            file_obj=image_data,
+            file_obj=image,
             workflow_path="MMS_hyper.json",
             positive_prompt=positive_prompt,
             negative_prompt=negative_prompt,
